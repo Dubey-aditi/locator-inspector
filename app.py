@@ -3,6 +3,9 @@
     streamlit run app.py
 """
 
+import subprocess
+import sys
+
 import pandas as pd
 import streamlit as st
 
@@ -21,6 +24,15 @@ st.caption(
     "Point at one element. See every way Playwright could find it — "
     "and whether each way finds exactly that element, checked on the live page."
 )
+
+
+@st.cache_resource(show_spinner="Downloading the browser (first run only)…")
+def install_browser() -> None:
+    """Streamlit Cloud installs the playwright package but not its browser."""
+    subprocess.run([sys.executable, "-m", "playwright", "install", "--only-shell", "chromium"], check=True)
+
+
+install_browser()
 
 
 @st.cache_data(show_spinner=False, ttl=600)
